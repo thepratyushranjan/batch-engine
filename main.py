@@ -3,6 +3,7 @@ import sys
 import uvicorn
 from typing import List, Optional
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from google.adk.cli.fast_api import get_fast_api_app
 from config import config
 from services.record_service import (
@@ -30,6 +31,15 @@ app: FastAPI = get_fast_api_app(
     allow_origins=["*"],
     web=True,
     agents_dir=AGENT_DIR,
+)
+
+# --- CORS Middleware for React/Next.js frontend ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Or specify your frontend URL like ["http://localhost:3000"]
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods including PATCH
+    allow_headers=["*"],
 )
 
 
